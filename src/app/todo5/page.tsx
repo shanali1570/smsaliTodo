@@ -1,21 +1,5 @@
-'use client';
-
-// ✅ Task 5: Edit Todo
-// 🎯 Goal:
-
-// Har todo ke sath Edit button ho
-
-// Jab Edit dabao:
-
-// Text input me purana text ajaye
-
-// Button ka naam ho Update
-
-// Jab Update dabao:
-
-// Text update ho jaye list me
-
 'use client'
+
 import { useState } from 'react'
 
 type Todo = {
@@ -27,21 +11,21 @@ type Todo = {
 export default function TodoWithEdit() {
   const [input, setInput] = useState('')
   const [todos, setTodos] = useState<Todo[]>([])
-  const [editId, setEditId] = useState<number | null>(null) // kis todo ko edit karna hai
+  const [editId, setEditId] = useState<number | null>(null)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim()) return
 
     if (editId !== null) {
-      // ✅ Editing existing todo
+      // Update existing todo
       const updated = todos.map(todo =>
         todo.id === editId ? { ...todo, text: input } : todo
       )
       setTodos(updated)
-      setEditId(null) // editing end
+      setEditId(null)
     } else {
-      // ✅ Adding new todo
+      // Add new todo
       const newTodo: Todo = {
         id: Date.now(),
         text: input,
@@ -58,73 +42,83 @@ export default function TodoWithEdit() {
   }
 
   const handleToggleDone = (id: number) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, done: !todo.done } : todo
-    ))
+    setTodos(
+      todos.map(todo =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo
+      )
+    )
   }
 
   const handleEdit = (todo: Todo) => {
-    setInput(todo.text)     // input box me text dikhaye
-    setEditId(todo.id)      // id save karein editing ke liye
+    setInput(todo.text)
+    setEditId(todo.id)
   }
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white min-h-screen">
-      <h1 className="text-2xl font-bold text-center">Step 5: Edit Todo</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
+        <h1 className="text-2xl font-bold text-center text-gray-800">
+          Step 5: Edit Todo
+        </h1>
 
-      {/* Input Form */}
-      <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
-        <input
-          type="text"
-          placeholder="Type or edit todo..."
-          className="border border-gray-300 p-2 rounded w-full"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          {editId !== null ? 'Update' : 'Add'}
-        </button>
-      </form>
-
-      {/* Show Todos */}
-      <ul className="mt-6 space-y-2">
-        {todos.map(todo => (
-          <li
-            key={todo.id}
-            className="bg-gray-100 p-2 rounded border border-gray-300 flex justify-between items-center"
+        {/* Input Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 mt-6">
+          <input
+            type="text"
+            placeholder="Type or edit todo..."
+            className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button
+            type="submit"
+            className={`${
+              editId !== null
+                ? 'bg-purple-600 hover:bg-purple-700'
+                : 'bg-blue-600 hover:bg-blue-700'
+            } text-white px-4 py-2 rounded transition duration-200`}
           >
-            <span className={todo.done ? 'line-through text-gray-500' : ''}>
-              {todo.text}
-            </span>
+            {editId !== null ? 'Update' : 'Add'}
+          </button>
+        </form>
 
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleToggleDone(todo.id)}
-                className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-              >
-                {todo.done ? 'Undo' : 'Done'}
-              </button>
+        {/* Show Todos */}
+        <ul className="mt-6 space-y-2">
+          {todos.map(todo => (
+            <li
+              key={todo.id}
+              className="bg-gray-50 p-3 rounded border border-gray-300 flex justify-between items-center shadow-sm"
+            >
+              <span className={todo.done ? 'line-through text-gray-400 italic' : 'text-gray-800'}>
+                {todo.text}
+              </span>
 
-              <button
-                onClick={() => handleEdit(todo)}
-                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-              >
-                Edit
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleToggleDone(todo.id)}
+                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition"
+                >
+                  {todo.done ? 'Undo' : 'Done'}
+                </button>
 
-              <button
-                onClick={() => handleDelete(todo.id)}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+                <button
+                  onClick={() => handleEdit(todo)}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded transition"
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={() => handleDelete(todo.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

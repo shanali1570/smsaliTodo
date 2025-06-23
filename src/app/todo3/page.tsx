@@ -1,12 +1,4 @@
-'use client';
-
-// ✅ Task 3: Add Delete Button to Remove Todo
-// 🎯 Goal:
-
-// Har todo ke sath ek Delete button ho
-
-// Jab button dabao → wo todo list se hata diya jaye
-
+'use client'
 
 import { useState } from 'react'
 
@@ -16,11 +8,10 @@ export default function TodoListWithDelete() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
     if (!input.trim()) return
 
     const newTodo = {
-      id: Date.now(),  // unique ID
+      id: Date.now(),
       text: input
     }
 
@@ -29,48 +20,51 @@ export default function TodoListWithDelete() {
   }
 
   const handleDelete = (id: number) => {
-    const updated = todos.filter(todo => todo.id !== id)
-    setTodos(updated)
+    setTodos(todos.filter(todo => todo.id !== id))
   }
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white min-h-screen">
-      <h1 className="text-2xl font-bold text-center">Step 3: Delete Todo</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
+        <h1 className="text-2xl font-bold text-center text-gray-800">
+          Step 3: Delete Todo
+        </h1>
 
-      {/* Input Form */}
-      <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
-        <input
-          type="text"
-          placeholder="Type something..."
-          className="border border-gray-300 p-2 rounded w-full"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Add
-        </button>
-      </form>
-
-      {/* Show Todos */}
-      <ul className="mt-6 space-y-2">
-        {todos.map(todo => (
-          <li
-            key={todo.id}
-            className="bg-gray-100 p-2 rounded border border-gray-300 flex justify-between items-center"
+        {/* Input Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 mt-6">
+          <input
+            type="text"
+            placeholder="Type something..."
+            className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
           >
-            <span>{todo.text}</span>
-            <button
-              onClick={() => handleDelete(todo.id)}
-              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+            Add
+          </button>
+        </form>
+
+        {/* Show Todos */}
+        <ul className="mt-6 space-y-2">
+          {todos.map(todo => (
+            <li
+              key={todo.id}
+              className="bg-gray-50 p-3 rounded border border-gray-300 shadow-sm flex justify-between items-center"
             >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+              <span className="text-gray-800">{todo.text}</span>
+              <button
+                onClick={() => handleDelete(todo.id)}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-200"
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

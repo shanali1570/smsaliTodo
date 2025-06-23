@@ -1,12 +1,5 @@
 'use client'
 
-// ✅ Task 6: LocalStorage Integration
-// 🎯 Goal:
-
-// App band karo ya page reload karo → todos wapis milain
-
-// Sab data browser ke andar localStorage me save hoga
-
 import { useEffect, useState } from 'react'
 
 type Todo = {
@@ -20,15 +13,15 @@ export default function TodoWithLocalStorage() {
   const [todos, setTodos] = useState<Todo[]>([])
   const [editId, setEditId] = useState<number | null>(null)
 
-  // ✅ Load todos from localStorage
+  // ✅ Load from localStorage once on first render
   useEffect(() => {
-    const savedTodos = localStorage.getItem('todos')
-    if (savedTodos) {
-      setTodos(JSON.parse(savedTodos))
+    const saved = localStorage.getItem('todos')
+    if (saved) {
+      setTodos(JSON.parse(saved))
     }
   }, [])
 
-  // ✅ Save todos whenever they change
+  // ✅ Save todos to localStorage when todos change
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos))
   }, [todos])
@@ -71,62 +64,68 @@ export default function TodoWithLocalStorage() {
   }
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white min-h-screen">
-      <h1 className="text-2xl font-bold text-center">Step 6: LocalStorage</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
+          Step 6: LocalStorage
+        </h1>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
-        <input
-          type="text"
-          placeholder="Type or edit todo..."
-          className="border border-gray-300 p-2 rounded w-full"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          {editId !== null ? 'Update' : 'Add'}
-        </button>
-      </form>
-
-      {/* List */}
-      <ul className="mt-6 space-y-2">
-        {todos.map(todo => (
-          <li
-            key={todo.id}
-            className="bg-gray-100 p-2 rounded border border-gray-300 flex justify-between items-center"
+        {/* Input Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="text"
+            placeholder="Type or edit todo..."
+            className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button
+            type="submit"
+            className={`${
+              editId !== null ? 'bg-purple-600 hover:bg-purple-700' : 'bg-blue-600 hover:bg-blue-700'
+            } text-white px-4 py-2 rounded transition`}
           >
-            <span className={todo.done ? 'line-through text-gray-500' : ''}>
-              {todo.text}
-            </span>
+            {editId !== null ? 'Update' : 'Add'}
+          </button>
+        </form>
 
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleToggleDone(todo.id)}
-                className="bg-green-500 text-white px-3 py-1 rounded"
-              >
-                {todo.done ? 'Undo' : 'Done'}
-              </button>
+        {/* Todo List */}
+        <ul className="mt-6 space-y-2">
+          {todos.map(todo => (
+            <li
+              key={todo.id}
+              className="bg-gray-50 p-3 rounded border border-gray-300 flex justify-between items-center"
+            >
+              <span className={todo.done ? 'line-through text-gray-400 italic' : 'text-gray-800'}>
+                {todo.text}
+              </span>
 
-              <button
-                onClick={() => handleEdit(todo)}
-                className="bg-yellow-500 text-white px-3 py-1 rounded"
-              >
-                Edit
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleToggleDone(todo.id)}
+                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition"
+                >
+                  {todo.done ? 'Undo' : 'Done'}
+                </button>
 
-              <button
-                onClick={() => handleDelete(todo.id)}
-                className="bg-red-500 text-white px-3 py-1 rounded"
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+                <button
+                  onClick={() => handleEdit(todo)}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded transition"
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={() => handleDelete(todo.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }
